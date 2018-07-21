@@ -41,11 +41,10 @@ LCD_LINE_2 = 0xC0 # LCD memory location 2nd line
 LCD_CHARS = [0x40,0x48,0x50,0x58,0x60,0x68,0x70,0x78]
 
 E_DELAY = 0.0005
+q = queue.Queue()
 #lcd_custom(0,[0x04,0x02,0x0F,0x12,0x14,0x10,0x10,0x10]) -- tmp
 # Define main program code
 def main():
-    q = queue.Queue()
-
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM) # Use BCM GPIO numbers
     GPIO.setup(LCD_E, GPIO.OUT) # Set GPIO's to output mode

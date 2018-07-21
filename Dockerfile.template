@@ -48,8 +48,7 @@ RUN set -x \
 && cd / \
 && rm -rf /usr/src/python ~/.cache
 
-# install "virtualenv", since the vast majority
-of users of this image will want it
+# install "virtualenv", since the vast majority of users of this image will want it
 RUN pip3 install --no-cache-dir virtualenv
 
 ENV PYTHON_DBUS_VERSION 1.2.4

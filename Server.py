@@ -56,14 +56,14 @@ def main():
 
     # Initialize display
     lcd_init()
-    wake_server()
+    #wake_server()
     # Loop - send text and sleep 3 seconds between texts
     # Change text to anything you wish, but must be 16 characters or less
-    '''q.put("Hello World!")
+    q.put("Hello World!")
     q.put("Funciona")
     while not q.empty():
         roll(q.get(True), True)
-    '''
+
 
 def wake_server():
     canPrint = True

@@ -40,6 +40,7 @@ LCD_CHARS = 16 # Characters per line (16 max)
 LCD_LINE_1 = 0x80 # LCD memory location for 1st line
 LCD_LINE_2 = 0xC0 # LCD memory location 2nd line
 
+E_DELAY = 0.0005
 # Define main program code
 def main():
     GPIO.setwarnings(False)
@@ -88,16 +89,20 @@ def main():
 
 # Initialize and clear display
 def lcd_init():
-    lcd_write(0x33,LCD_CMD) # Initialize
-    lcd_write(0x32,LCD_CMD) # Set to 4-bit mode
-    lcd_write(0x06,LCD_CMD) # Cursor move direction
-    lcd_write(0x0C,LCD_CMD) # Turn cursor off
-    lcd_write(0x28,LCD_CMD) # 2 line display
-    lcd_write(0x01,LCD_CMD) # Clear display
-    time.sleep(0.0005) # Delay to allow commands to process
+  # Initialise display
+  lcd_byte(0x33,LCD_CMD) # 110011 Initialise
+  lcd_byte(0x32,LCD_CMD) # 110010 Initialise
+  lcd_byte(0x06,LCD_CMD) # 000110 Cursor move direction
+  lcd_byte(0x0C,LCD_CMD) # 001100 Display On,Cursor Off, Blink Off
+  lcd_byte(0x28,LCD_CMD) # 101000 Data length, number of lines, font size
+  lcd_byte(0x01,LCD_CMD) # 000001 Clear display
+  time.sleep(E_DELAY)
 
 def lcd_write(bits, mode):
-    # High bits
+    # Send byte to data pins
+    # bits = data
+    # mode = True  for character
+    #        False for command
     GPIO.output(LCD_RS, mode) # RS
 
     GPIO.output(LCD_D4, False)
@@ -134,9 +139,12 @@ def lcd_write(bits, mode):
     lcd_toggle_enable()
 
 def lcd_toggle_enable():
-    time.sleep(0.0005)
+    # Toggle enable
+    time.sleep(E_DELAY)
     GPIO.output(LCD_E, True)
-    time.sleep(0.0005)
+    time.sleep(E_PULSE)
+    GPIO.output(LCD_E, False)
+    time.sleep(E_DELAY)
 
 def lcd_text(message,line):
     # Send text to display
@@ -147,17 +155,17 @@ def lcd_text(message,line):
     for i in range(LCD_CHARS):
         lcd_write(ord(message[i]),LCD_CHR)
 
-
-#Begin program
-try:
- main()
-except KeyboardInterrupt:
-    pass
-finally:
-    lcd_write(0x01, LCD_CMD)
-    lcd_text("Goodbye",LCD_LINE_1)
-    lcd_text("Thanks!",LCD_LINE_2)
-    GPIO.cleanup()
+if __name__ == '__main__':
+    #Begin program
+    try:
+        main()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        lcd_write(0x01, LCD_CMD)
+        lcd_text("Goodbye",LCD_LINE_1)
+        lcd_text(" ",LCD_LINE_2)
+        GPIO.cleanup()
 
 
 def wake_server():

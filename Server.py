@@ -63,7 +63,7 @@ def main():
     while not q.empty():
         disp = ' '*LCD_CHARS + q.get(True) + ' '*LCD_CHARS
         for i in range(len(disp)-16):
-            lcd_text(disp[len(disp)-i-16:len(disp)-i:],LCD_LINE_1)
+            lcd_text(disp[i:i+16:],LCD_LINE_1)
             time.sleep(0.5)
 
         # End of main program code

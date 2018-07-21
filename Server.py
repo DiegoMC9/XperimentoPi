@@ -45,7 +45,7 @@ E_DELAY = 0.0005
 # Define main program code
 def main():
     q = queue.Queue()
-    rmsg = ""
+
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM) # Use BCM GPIO numbers
     GPIO.setup(LCD_E, GPIO.OUT) # Set GPIO's to output mode
@@ -68,6 +68,7 @@ def main():
 
 def wake_server():
     canPrint = True
+    rmsg = ""
     # Create a TCP/IP socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 

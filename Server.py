@@ -41,7 +41,6 @@ LCD_LINE_1 = 0x80 # LCD memory location for 1st line
 LCD_LINE_2 = 0xC0 # LCD memory location 2nd line
 
 E_DELAY = 0.0005
-E_PULSE = 0.0005
 
 # Define main program code
 def main():
@@ -59,17 +58,13 @@ def main():
 
     # Loop - send text and sleep 3 seconds between texts
     # Change text to anything you wish, but must be 16 characters or less
-
-    while True:
-        lcd_text("Hello World!",LCD_LINE_1)
-        lcd_text("Funciona",LCD_LINE_2)
-
-        time.sleep(3) # 3 second delay
-
-        lcd_text("Diego",LCD_LINE_1)
-        lcd_text("Genio",LCD_LINE_2)
-
-        time.sleep(3) # 3 second delay
+    q.put("Hello World!")
+    q.put("Funciona")
+    while not q.empty():
+        disp = ' '*LCD_CHARS + q.get(True) + ' '*LCD_CHARS
+        for i in range(len(disp)-16):
+            lcd_text(disp[len(disp)-i-16:len(disp)-i:],LCD_LINE_1)
+            time.sleep(0.5)
 
         # End of main program code
 
@@ -129,7 +124,7 @@ def lcd_toggle_enable():
     # Toggle enable
     time.sleep(E_DELAY)
     GPIO.output(LCD_E, True)
-    time.sleep(E_PULSE)
+    time.sleep(E_DELAY)
     GPIO.output(LCD_E, False)
     time.sleep(E_DELAY)
 

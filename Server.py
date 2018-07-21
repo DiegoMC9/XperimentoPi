@@ -41,6 +41,8 @@ LCD_LINE_1 = 0x80 # LCD memory location for 1st line
 LCD_LINE_2 = 0xC0 # LCD memory location 2nd line
 
 E_DELAY = 0.0005
+E_PULSE = 0.0005
+
 # Define main program code
 def main():
     GPIO.setwarnings(False)

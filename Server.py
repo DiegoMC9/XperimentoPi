@@ -40,8 +40,10 @@ LCD_CHARS = 16 # Characters per line (16 max)
 LCD_LINE_1 = 0x80 # LCD memory location for 1st line
 LCD_LINE_2 = 0xC0 # LCD memory location 2nd line
 
-E_DELAY = 0.0005
+LCD_CHARS = [0x40,0x48,0x50,0x58,0x60,0x68,0x70,0x78]
 
+E_DELAY = 0.0005
+#lcd_custom(0,[0x04,0x02,0x0F,0x12,0x14,0x10,0x10,0x10]) -- tmp
 # Define main program code
 def main():
     GPIO.setwarnings(False)
@@ -55,20 +57,75 @@ def main():
 
     # Initialize display
     lcd_init()
-
+    wake_server()
     # Loop - send text and sleep 3 seconds between texts
     # Change text to anything you wish, but must be 16 characters or less
-    q.put("Hello World!")
+    '''q.put("Hello World!")
     q.put("Funciona")
     while not q.empty():
-        disp = ' '*LCD_CHARS + q.get(True) + ' '*LCD_CHARS
+        roll(q.get(True), True)
+    '''
+
+def wake_server():
+    canPrint = True
+    # Create a TCP/IP socket
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    # Bind the socket to the port
+    server_address = ('', 80)
+    print('starting up on {} port {}'.format(*server_address))
+    sock.bind(server_address)
+
+    # Listen for incoming connections
+    sock.listen(1)
+    while True:
+        # Wait for a connection
+        print('waiting for a connection')
+        connection, client_address = sock.accept()
+        try:
+            print('connection from', client_address)
+            # Receive the data in small chunks and retransmit it
+            while True:
+                data = connection.recv(16)
+                #print('received {}'.format(data))
+                if data == b'done':
+                    print('received {}'.format(msg))
+                    q.put(msg)
+                    msg = ""
+                elif data:
+                    msg += data.decode()
+                    print('sending data back to the client')
+                    connection.sendall(data)
+                else:
+                    print('Disconnected: ', client_address)
+                    break
+                if not q.empty() and canPrint:
+                    canPrint = False
+                    roll(q.get(True), True)
+
+        finally:
+            # Clean up the connection
+            connection.close()
+
+# roll text (string, boolean) True->Right-left, False-> Left-Right
+def roll(msg, right):
+    disp = ' '*LCD_CHARS + msg  + ' '*LCD_CHARS
+    if right:
+        for i in range(len(disp)-16):
+            lcd_text(disp[len(disp)-i-16:len(disp)-i:],LCD_LINE_1)
+            time.sleep(0.5)
+
+    else:
         for i in range(len(disp)-16):
             lcd_text(disp[i:i+16:],LCD_LINE_1)
             time.sleep(0.5)
-
-        # End of main program code
-
-
+    canPrint = True
+'''
+def lcd_custom(charPos,charDef):
+    lcd_byte(LCD_CHARS[charPos],LCD_CMD)
+    for line in charDef:
+        lcd_byte(line,LCD_CHR)
+'''
 # Initialize and clear display
 def lcd_init():
   # Initialise display
@@ -148,43 +205,3 @@ if __name__ == '__main__':
         lcd_text("Goodbye",LCD_LINE_1)
         lcd_text(" ",LCD_LINE_2)
         GPIO.cleanup()
-
-
-def wake_server():
-    # Create a TCP/IP socket
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-    # Bind the socket to the port
-    server_address = ('', 80)
-    print('starting up on {} port {}'.format(*server_address))
-    sock.bind(server_address)
-
-    # Listen for incoming connections
-    sock.listen(1)
-    while True:
-        # Wait for a connection
-        print('waiting for a connection')
-        connection, client_address = sock.accept()
-        try:
-            print('connection from', client_address)
-
-            # Receive the data in small chunks and retransmit it
-            while True:
-                data = connection.recv(16)
-                #print('received {}'.format(data))
-                if data == b'done':
-                    print('received {}'.format(msg))
-                    q.put(msg)
-                    msg = ""
-                elif data:
-                    msg += data.decode()
-                    print('sending data back to the client')
-                    connection.sendall(data)
-                else:
-                    print('no data from', client_address)
-                    while not q.empty():
-                        print(q.get())
-                        break
-        finally:
-            # Clean up the connection
-            connection.close()

@@ -4,8 +4,6 @@ import socket
 import sys
 import queue
 # first lets create the messages queue
-q = queue.Queue()
-msg = ""
 
 # Pinout of the LCD:
 # 1 : GND
@@ -46,6 +44,8 @@ E_DELAY = 0.0005
 #lcd_custom(0,[0x04,0x02,0x0F,0x12,0x14,0x10,0x10,0x10]) -- tmp
 # Define main program code
 def main():
+    q = queue.Queue()
+    rmsg = ""
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM) # Use BCM GPIO numbers
     GPIO.setup(LCD_E, GPIO.OUT) # Set GPIO's to output mode
@@ -89,11 +89,11 @@ def wake_server():
                 data = connection.recv(16)
                 #print('received {}'.format(data))
                 if data == b'done':
-                    print('received {}'.format(msg))
-                    q.put(msg)
-                    msg = ""
+                    print('received {}'.format(rmsg))
+                    q.put(rmsg)
+                    rmsg = ""
                 elif data:
-                    msg += data.decode()
+                    rmsg += data.decode()
                     print('sending data back to the client')
                     connection.sendall(data)
                 else:

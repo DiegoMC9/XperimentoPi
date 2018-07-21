@@ -62,7 +62,7 @@ RUN set -x \
 && PYTHON=python3.6 ./configure \
 && make -j$(nproc) \
 && make install -j$(nproc) \
-&& cd/ \
+&& cd / \
 && rm -rf /usr/src/dbus-python
 
 # make some useful symlinks that are expected to exist

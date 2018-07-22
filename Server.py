@@ -40,7 +40,7 @@ LCD_CMD = False # Command mode
 LCD_CHARS = 16 # Characters per line (16 max)
 LCD_LINE_1 = 0x80 # LCD memory lUsageUsageUsageocation for 1st line
 LCD_LINE_2 = 0xC0 # LCD memory location 2nd line
-
+RUNNING = True
 E_DELAY = 0.0005
 #lcd_custom(0,[0x04,0x02,0x0F,0x12,0x14,0x10,0x10,0x10]) -- tmp
 # Define main program code
@@ -52,7 +52,7 @@ def main(q):
     lcd_init()
     # Loop - send text and sleep 3 seconds between texts
     # Change text to anything you wish, but must be 16 characters or less
-    while True:
+    while RUNNING:
         lcd_text(IP, LCD_LINE_2)
         if not q.empty():
             roll(q.get(True), LEFT)
@@ -157,16 +157,14 @@ def wake_server(q):
     print('starting up on {} port {}'.format(*server_address))
     sock.bind(server_address)
     # Listen for incoming connections
-    running = True
     sock.listen(1)
-    while running:
+    while RUNNING:
         msg = ""
         # Wait for a connection
         print('waiting for a connection')
         connection, client_address = sock.accept()
         try:
             print('connection from', client_address)
-
             # Receive the data in small chunks and retransmit it
             while True:
                 data = connection.recv(16)
@@ -188,7 +186,7 @@ def wake_server(q):
 
         finally:
             # Clean up the connection
-            running = False
+            RUNNING = False
             connection.close()
 
 if __name__ == '__main__':

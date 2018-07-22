@@ -12,7 +12,7 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_address = ('', 80)
 print('starting up on {} port {}'.format(*server_address))
 sock.bind(server_address)
-IP=socket.gethostbyname(socket.getfqdn())
+IP=socket.gethostbyname(socket.gethostname())
 msg = ""
 
 # Pinout of the LCD:

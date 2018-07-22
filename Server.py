@@ -78,7 +78,7 @@ def main():
         if not q.empty():
             roll(q.get(True), LEFT)
         else:
-            roll("No messages left", RIGHT)
+            lcd_text("No messages left", LCD_LINE_1)
 
 # roll text (string, boolean) True->Right-left, False-> Left-Right
 def roll(msg, right):
@@ -178,8 +178,9 @@ def wake_server():
                 data = connection.recv(16)
                 #print('received {}'.format(data))
                 if data == b'done':
-                    print('received {}'.format(msg))
                     q.put(msg)
+                    print('adding {} to queue'.format(msg))
+                    print('Queue: {}'.format(list(q)))
                     msg = ""
                 elif data:
                     msg += data.decode()

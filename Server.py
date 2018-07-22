@@ -48,15 +48,6 @@ def main(q):
     RIGHT = True
     LEFT = False
 
-    GPIO.setwarnings(False)
-    GPIO.setmode(GPIO.BCM) # Use BCM GPIO numbers
-    GPIO.setup(LCD_E, GPIO.OUT) # Set GPIO's to output mode
-    GPIO.setup(LCD_RS, GPIO.OUT)
-    GPIO.setup(LCD_D4, GPIO.OUT)
-    GPIO.setup(LCD_D5, GPIO.OUT)
-    GPIO.setup(LCD_D6, GPIO.OUT)
-    GPIO.setup(LCD_D7, GPIO.OUT)
-
     # Initialize display
     lcd_init()
     # Loop - send text and sleep 3 seconds between texts
@@ -83,14 +74,22 @@ def roll(msg, right):
 
 # Initialize and clear display
 def lcd_init():
-  # Initialise display
-  lcd_write(0x33,LCD_CMD) # 110011 Initialise
-  lcd_write(0x32,LCD_CMD) # 110010 Initialise
-  lcd_write(0x06,LCD_CMD) # 000110 Cursor move direction
-  lcd_write(0x0C,LCD_CMD) # 001100 Display On,Cursor Off, Blink Off
-  lcd_write(0x28,LCD_CMD) # 101000 Data length, number of lines, font size
-  lcd_write(0x01,LCD_CMD) # 000001 Clear display
-  sleep(E_DELAY)
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BCM) # Use BCM GPIO numbers
+    GPIO.setup(LCD_E, GPIO.OUT) # Set GPIO's to output mode
+    GPIO.setup(LCD_RS, GPIO.OUT)
+    GPIO.setup(LCD_D4, GPIO.OUT)
+    GPIO.setup(LCD_D5, GPIO.OUT)
+    GPIO.setup(LCD_D6, GPIO.OUT)
+    GPIO.setup(LCD_D7, GPIO.OUT)
+    # Initialise display
+    lcd_write(0x33,LCD_CMD) # 110011 Initialise
+    lcd_write(0x32,LCD_CMD) # 110010 Initialise
+    lcd_write(0x06,LCD_CMD) # 000110 Cursor move direction
+    lcd_write(0x0C,LCD_CMD) # 001100 Display On,Cursor Off, Blink Off
+    lcd_write(0x28,LCD_CMD) # 101000 Data length, number of lines, font size
+    lcd_write(0x01,LCD_CMD) # 000001 Clear display
+    sleep(E_DELAY)
 
 def lcd_write(bits, mode):
     # Send byte to data pins

@@ -37,10 +37,8 @@ LCD_D7 = 18 # Pi pin 12
 LCD_CHR = True # Character mode
 LCD_CMD = False # Command mode
 LCD_CHARS = 16 # Characters per line (16 max)
-LCD_LINE_1 = 0x80 # LCD memory location for 1st line
+LCD_LINE_1 = 0x80 # LCD memory lUsageUsageUsageocation for 1st line
 LCD_LINE_2 = 0xC0 # LCD memory location 2nd line
-
-LCD_CHARS = [0x40,0x48,0x50,0x58,0x60,0x68,0x70,0x78]
 
 E_DELAY = 0.0005
 #lcd_custom(0,[0x04,0x02,0x0F,0x12,0x14,0x10,0x10,0x10]) -- tmp
@@ -64,23 +62,18 @@ def main():
     q.put("Funciona")
     while not q.empty():
         roll(q.get(True), True)
-'''
-def lcd_custom(charPos,charDef):
-    lcd_byte(LCD_CHARS[charPos],LCD_CMD)
-    for line in charDef:
-        lcd_byte(line,LCD_CHR)
-'''
+
 # roll text (string, boolean) True->Right-left, False-> Left-Right
 def roll(msg, right):
-    disp = ' '*LCD_CHARS + msg  + ' '*LCD_CHARS
+    disp = " "*LCD_CHARS + msg + " "*LCD_CHARS
     if right:
         for i in range(len(disp)-16):
-            lcd_text(disp[len(disp)-i-16:len(disp)-i:],LCD_LINE_1)
+            lcd_text(disp[len(disp)-i-LCD_CHARS:len(disp)-i], LCD_LINE_1)
             time.sleep(0.5)
 
     else:
         for i in range(len(disp)-16):
-            lcd_text(disp[i:i+16:],LCD_LINE_1)
+            lcd_text(disp[i:i+LCD_CHARS], LCD_LINE_1)
             time.sleep(0.5)
 
 # Initialize and clear display
@@ -144,7 +137,7 @@ def lcd_toggle_enable():
 
 def lcd_text(message,line):
     # Send text to display
-    message = message.ljust(LCD_CHARS," ")
+    #message = message.ljust(LCD_CHARS," ")
 
     lcd_write(line, LCD_CMD)
 

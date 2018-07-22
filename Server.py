@@ -55,7 +55,7 @@ LCD_LINE_2 = 0xC0 # LCD memory location 2nd line
 
 RIGHT = True
 Left = False
-IP = ""
+
 E_DELAY = 0.0005
 #lcd_custom(0,[0x04,0x02,0x0F,0x12,0x14,0x10,0x10,0x10]) -- tmp
 # Define main program code

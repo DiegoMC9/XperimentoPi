@@ -13,7 +13,7 @@ print('starting up on {} port {}'.format(*server_address))
 try:
     sock.bind(server_address)
 except socket.error as err:
-    print('Bind failed. Error Code : ' + str(err[0]) + ' Message ' + err[1])
+    print('Bind failed. Error Code : ' + str(err[0]) + ' Message ' + str(err[1]))
     sys.exit()
 #IP=socket.gethostbyname(socket.gethostname())
 IP = "192.168.1.127"

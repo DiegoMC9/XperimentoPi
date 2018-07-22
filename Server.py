@@ -43,7 +43,7 @@ LCD_LINE_2 = 0xC0 # LCD memory location 2nd line
 
 RIGHT = True
 Left = False
-
+IP = ""
 E_DELAY = 0.0005
 #lcd_custom(0,[0x04,0x02,0x0F,0x12,0x14,0x10,0x10,0x10]) -- tmp
 # Define main program code
@@ -59,13 +59,13 @@ def main():
 
     # Initialize display
     lcd_init()
-    lcd_text(socket.gethostbyname(socket.getfqdn()), LCD_LINE_2)
+    lcd_text(IP, LCD_LINE_2)
     # Loop - send text and sleep 3 seconds between texts
     # Change text to anything you wish, but must be 16 characters or less
     q.put("Hello World!")
     q.put("Funciona")
     while True:
-        if q.size()>0:
+        if not q.empty():
             roll(q.get(True), RIGHT)
         else:
             roll("No messages left", RIGHT)
@@ -160,7 +160,7 @@ def wake_server():
     server_address = ('', 80)
     print('starting up on {} port {}'.format(*server_address))
     sock.bind(server_address)
-
+    IP=socket.gethostbyname(socket.getfqdn())
     # Listen for incoming connections
     sock.listen(1)
     while True:

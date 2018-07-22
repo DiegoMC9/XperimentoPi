@@ -1,9 +1,8 @@
 import RPi.GPIO as GPIO
-import time
+from time import sleep
 import socket
 import sys
-import queue
-import multiprocessing
+from multiprocessing import Queue, Process
 # first lets create the messages queue
 q = queue.LifoQueue()
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -13,8 +12,8 @@ server_address = ('', 80)
 print('starting up on {} port {}'.format(*server_address))
 try:
     sock.bind(server_address)
-except socket.error as msg:
-    print('Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1])
+except socket.error as err:
+    print('Bind failed. Error Code : ' + str(err[0]) + ' Message ' + err[1])
     sys.exit()
 #IP=socket.gethostbyname(socket.gethostname())
 IP = "192.168.1.127"
@@ -59,7 +58,7 @@ Left = False
 E_DELAY = 0.0005
 #lcd_custom(0,[0x04,0x02,0x0F,0x12,0x14,0x10,0x10,0x10]) -- tmp
 # Define main program code
-def main():
+def main(q):
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM) # Use BCM GPIO numbers
     GPIO.setup(LCD_E, GPIO.OUT) # Set GPIO's to output mode
@@ -86,12 +85,12 @@ def roll(msg, right):
     if right:
         for i in range(len(disp)-16):
             lcd_text(disp[len(disp)-i-LCD_CHARS:len(disp)-i], LCD_LINE_1)
-            time.sleep(0.5)
+            sleep(0.5)
 
     else:
         for i in range(len(disp)-16):
             lcd_text(disp[i:i+LCD_CHARS], LCD_LINE_1)
-            time.sleep(0.5)
+            sleep(0.5)
 
 # Initialize and clear display
 def lcd_init():
@@ -102,7 +101,7 @@ def lcd_init():
   lcd_write(0x0C,LCD_CMD) # 001100 Display On,Cursor Off, Blink Off
   lcd_write(0x28,LCD_CMD) # 101000 Data length, number of lines, font size
   lcd_write(0x01,LCD_CMD) # 000001 Clear display
-  time.sleep(E_DELAY)
+  sleep(E_DELAY)
 
 def lcd_write(bits, mode):
     # Send byte to data pins
@@ -146,11 +145,11 @@ def lcd_write(bits, mode):
 
 def lcd_toggle_enable():
     # Toggle enable
-    time.sleep(E_DELAY)
+    sleep(E_DELAY)
     GPIO.output(LCD_E, True)
-    time.sleep(E_DELAY)
+    sleep(E_DELAY)
     GPIO.output(LCD_E, False)
-    time.sleep(E_DELAY)
+    sleep(E_DELAY)
 
 def lcd_text(message,line):
     # Send text to display
@@ -162,7 +161,7 @@ def lcd_text(message,line):
     for i in range(LCD_CHARS):
         lcd_write(ord(message[i]),LCD_CHR)
 
-def wake_server():
+def wake_server(q):
     # Listen for incoming connections
     sock.listen(1)
     while True:
@@ -197,10 +196,12 @@ def wake_server():
 if __name__ == '__main__':
     #Begin program
     try:
-        server = multiprocessing.Process(name='Server', target=wake_server)
-        LCD = multiprocessing.Process(name='LCD', target=main)
+        server = Process(name='server', target=wake_server, args = (q, ))
+        LCD = Process(name='LCD', target=main, args = (q, ))
         server.start()
         LCD.start()
+        server.join()
+        LCD.join()
     except KeyboardInterrupt:
         pass
     finally:

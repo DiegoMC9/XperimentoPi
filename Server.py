@@ -46,7 +46,7 @@ E_DELAY = 0.0005
 # Define main program code
 def main(q):
     RIGHT = True
-    Left = False
+    LEFT = False
 
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM) # Use BCM GPIO numbers

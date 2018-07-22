@@ -17,8 +17,8 @@ except socket.error as msg:
     print('Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1])
     sys.exit()
 #IP=socket.gethostbyname(socket.gethostname())
-IP = "192.168.1.107"
-msg = ""
+IP = "192.168.1.127"
+
 
 # Pinout of the LCD:
 # 1 : GND
@@ -71,14 +71,12 @@ def main():
 
     # Initialize display
     lcd_init()
-    lcd_text(IP, LCD_LINE_2)
     # Loop - send text and sleep 3 seconds between texts
     # Change text to anything you wish, but must be 16 characters or less
-    q.put("Hello World!")
-    q.put("Funciona")
     while True:
+        lcd_text(IP, LCD_LINE_2)
         if not q.empty():
-            roll(q.get(True), RIGHT)
+            roll(q.get(True), LEFT)
         else:
             roll("No messages left", RIGHT)
 
@@ -168,6 +166,7 @@ def wake_server():
     # Listen for incoming connections
     sock.listen(1)
     while True:
+        msg = ""
         # Wait for a connection
         print('waiting for a connection')
         connection, client_address = sock.accept()

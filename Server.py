@@ -95,7 +95,7 @@ def lcd_write(bits, mode):
     # Send byte to data pins
     # bits = data
     # mode = True  for character
-    #        False for command
+    # False for command
     GPIO.output(LCD_RS, mode) # RS
 
     GPIO.output(LCD_D4, False)
@@ -150,7 +150,7 @@ def lcd_text(message,line):
         lcd_write(ord(message[i]),LCD_CHR)
 
 def wake_server(q):
-    run = True
+    #run = True
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # Create TCP/IP socket
     # Bind the socket to the port
@@ -159,7 +159,7 @@ def wake_server(q):
     sock.bind(server_address)
     # Listen for incoming connections
     sock.listen(1)
-    while run:
+    while True:
         msg = ""
         # Wait for a connection
         print('waiting for a connection')
@@ -187,7 +187,7 @@ def wake_server(q):
 
         finally:
             # Clean up the connection
-            run = False
+            #run = False
             connection.close()
 
 if __name__ == '__main__':
@@ -198,7 +198,7 @@ if __name__ == '__main__':
         server.start()
         LCD.start()
         server.join()
-        LCD.terminate()
+        #LCD.terminate()
         LCD.join()
     except KeyboardInterrupt:
         pass

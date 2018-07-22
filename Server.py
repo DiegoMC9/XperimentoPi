@@ -4,7 +4,7 @@ import socket
 import sys
 from multiprocessing import Queue, Process
 # first lets create the messages queue
-q = queue.LifoQueue()
+q = Queue()
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # Create TCP/IP socket
 # Bind the socket to the port

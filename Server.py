@@ -52,7 +52,7 @@ def display(q):
     lcd_init()
     # Loop - send text and sleep 3 seconds between texts
     # Change text to anything you wish, but must be 16 characters or less
-    while RUNNING:
+    while True:
         lcd_text(IP, LCD_LINE_2)
         if not q.empty():
             roll(q.get(True), LEFT)

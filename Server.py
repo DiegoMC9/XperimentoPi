@@ -40,6 +40,9 @@ LCD_CHARS = 16 # Characters per line (16 max)
 LCD_LINE_1 = 0x80 # LCD memory lUsageUsageUsageocation for 1st line
 LCD_LINE_2 = 0xC0 # LCD memory location 2nd line
 
+RIGHT = True
+Left = False
+
 E_DELAY = 0.0005
 #lcd_custom(0,[0x04,0x02,0x0F,0x12,0x14,0x10,0x10,0x10]) -- tmp
 # Define main program code
@@ -55,13 +58,13 @@ def main():
 
     # Initialize display
     lcd_init()
-
+    lcd_text(socket.gethostbyname(socket.getfqdn()), LCD_LINE_2)
     # Loop - send text and sleep 3 seconds between texts
     # Change text to anything you wish, but must be 16 characters or less
     q.put("Hello World!")
     q.put("Funciona")
     while not q.empty():
-        roll(q.get(True), True)
+        roll(q.get(True), RIGHT)
 
 # roll text (string, boolean) True->Right-left, False-> Left-Right
 def roll(msg, right):

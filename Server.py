@@ -40,11 +40,11 @@ LCD_CMD = False # Command mode
 LCD_CHARS = 16 # Characters per line (16 max)
 LCD_LINE_1 = 0x80 # LCD memory lUsageUsageUsageocation for 1st line
 LCD_LINE_2 = 0xC0 # LCD memory location 2nd line
-RUNNING = True
+
 E_DELAY = 0.0005
 #lcd_custom(0,[0x04,0x02,0x0F,0x12,0x14,0x10,0x10,0x10]) -- tmp
 # Define main program code
-def main(q):
+def display(q):
     RIGHT = True
     LEFT = False
 
@@ -191,9 +191,10 @@ def wake_server(q):
 
 if __name__ == '__main__':
     #Begin program
+    RUNNING = True
     try:
         server = Process(name='server', target=wake_server, args = (q, ))
-        LCD = Process(name='LCD', target=main, args = (q, ))
+        LCD = Process(name='LCD', target=display, args = (q, ))
         server.start()
         LCD.start()
         server.join()

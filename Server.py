@@ -4,7 +4,7 @@ import socket
 import sys
 import queue
 # first lets create the messages queue
-q = queue.Queue()
+q = queue.LifoQueue()
 msg = ""
 
 # Pinout of the LCD:
@@ -189,6 +189,7 @@ def wake_server():
 if __name__ == '__main__':
     #Begin program
     try:
+        wake_server()
         main()
     except KeyboardInterrupt:
         pass

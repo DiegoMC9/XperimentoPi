@@ -16,7 +16,8 @@ try:
 except socket.error as msg:
     print('Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1])
     sys.exit()
-IP=socket.gethostbyname(socket.gethostname())
+#IP=socket.gethostbyname(socket.gethostname())
+IP = "192.168.1.107"
 msg = ""
 
 # Pinout of the LCD:

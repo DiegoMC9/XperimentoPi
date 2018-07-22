@@ -174,7 +174,6 @@ def wake_server(q):
                 if data == b'done':
                     q.put(msg)
                     print('adding {} to queue'.format(msg))
-                    print('Queue: {}'.format(list(q)))
                     msg = ""
                 elif data:
                     msg += data.decode()

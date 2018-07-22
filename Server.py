@@ -65,12 +65,12 @@ def roll(msg, right):
     if right:
         for i in range(len(disp)-16):
             lcd_text(disp[len(disp)-i-LCD_CHARS:len(disp)-i], LCD_LINE_1)
-            sleep(0.5)
+            sleep(0.25)
 
     else:
         for i in range(len(disp)-16):
             lcd_text(disp[i:i+LCD_CHARS], LCD_LINE_1)
-            sleep(0.5)
+            sleep(0.25)
 
 # Initialize and clear display
 def lcd_init():
@@ -157,8 +157,9 @@ def wake_server(q):
     print('starting up on {} port {}'.format(*server_address))
     sock.bind(server_address)
     # Listen for incoming connections
+    running = True
     sock.listen(1)
-    while True:
+    while running:
         msg = ""
         # Wait for a connection
         print('waiting for a connection')
@@ -174,6 +175,9 @@ def wake_server(q):
                     q.put(msg)
                     print('adding {} to queue'.format(msg))
                     msg = ""
+                elif data == b'exit':
+                    print('Disconnected: ', client_address)
+                    break
                 elif data:
                     msg += data.decode()
                     print('sending data back to the client')
@@ -184,6 +188,7 @@ def wake_server(q):
 
         finally:
             # Clean up the connection
+            running = False
             connection.close()
 
 if __name__ == '__main__':

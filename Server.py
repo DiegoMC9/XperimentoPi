@@ -150,7 +150,7 @@ def lcd_text(message,line):
         lcd_write(ord(message[i]),LCD_CHR)
 
 def wake_server(q):
-    RUNNING = True
+    run = True
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # Create TCP/IP socket
     # Bind the socket to the port
@@ -159,7 +159,7 @@ def wake_server(q):
     sock.bind(server_address)
     # Listen for incoming connections
     sock.listen(1)
-    while RUNNING:
+    while run:
         msg = ""
         # Wait for a connection
         print('waiting for a connection')
@@ -187,7 +187,7 @@ def wake_server(q):
 
         finally:
             # Clean up the connection
-            RUNNING = False
+            run = False
             connection.close()
 
 if __name__ == '__main__':

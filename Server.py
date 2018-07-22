@@ -6,6 +6,13 @@ import queue
 import multiprocessing
 # first lets create the messages queue
 q = queue.LifoQueue()
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# Create TCP/IP socket
+# Bind the socket to the port
+server_address = ('', 80)
+print('starting up on {} port {}'.format(*server_address))
+sock.bind(server_address)
+IP=socket.gethostbyname(socket.getfqdn())
 msg = ""
 
 # Pinout of the LCD:
@@ -153,14 +160,6 @@ def lcd_text(message,line):
         lcd_write(ord(message[i]),LCD_CHR)
 
 def wake_server():
-    # Create a TCP/IP socket
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-    # Bind the socket to the port
-    server_address = ('', 80)
-    print('starting up on {} port {}'.format(*server_address))
-    sock.bind(server_address)
-    IP=socket.gethostbyname(socket.getfqdn())
     # Listen for incoming connections
     sock.listen(1)
     while True:

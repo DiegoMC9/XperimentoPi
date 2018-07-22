@@ -3,6 +3,7 @@ import time
 import socket
 import sys
 import queue
+import multiprocessing
 # first lets create the messages queue
 q = queue.LifoQueue()
 msg = ""
@@ -63,8 +64,11 @@ def main():
     # Change text to anything you wish, but must be 16 characters or less
     q.put("Hello World!")
     q.put("Funciona")
-    while not q.empty():
-        roll(q.get(True), RIGHT)
+    while True:
+        if q.size()>0:
+            roll(q.get(True), RIGHT)
+        else:
+            roll("No messages left", RIGHT)
 
 # roll text (string, boolean) True->Right-left, False-> Left-Right
 def roll(msg, right):
@@ -189,8 +193,10 @@ def wake_server():
 if __name__ == '__main__':
     #Begin program
     try:
-        wake_server()
-        main()
+        server = multiprocessing.Process(name='Server', target=wake_server)
+        LCD = multiprocessing.Process(name='LCD', target=main)
+        server.start()
+        LCD.start()
     except KeyboardInterrupt:
         pass
     finally:

@@ -137,10 +137,11 @@ def lcd_toggle_enable():
 
 def lcd_text(message,line):
     # Send text to display
-    #message = message.ljust(LCD_CHARS," ")
+    if len(message)<16:
+        message = message.ljust(LCD_CHARS," ")
 
     lcd_write(line, LCD_CMD)
-
+    print(message)
     for i in range(LCD_CHARS):
         lcd_write(ord(message[i]),LCD_CHR)
 

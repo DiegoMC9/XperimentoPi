@@ -196,6 +196,8 @@ if __name__ == '__main__':
     try:
         server = Process(name='server', target=wake_server, args = (q, ))
         LCD = Process(name='LCD', target=display, args = (q, ))
+        server.daemon = True
+        LCD.daemon = True
         server.start()
         LCD.start()
         server.join()

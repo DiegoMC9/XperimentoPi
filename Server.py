@@ -41,13 +41,13 @@ LCD_CHARS = 16 # Characters per line (16 max)
 LCD_LINE_1 = 0x80 # LCD memory lUsageUsageUsageocation for 1st line
 LCD_LINE_2 = 0xC0 # LCD memory location 2nd line
 
-RIGHT = True
-Left = False
-
 E_DELAY = 0.0005
 #lcd_custom(0,[0x04,0x02,0x0F,0x12,0x14,0x10,0x10,0x10]) -- tmp
 # Define main program code
 def main(q):
+    RIGHT = True
+    Left = False
+
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM) # Use BCM GPIO numbers
     GPIO.setup(LCD_E, GPIO.OUT) # Set GPIO's to output mode

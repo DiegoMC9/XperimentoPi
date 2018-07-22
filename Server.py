@@ -150,6 +150,7 @@ def lcd_text(message,line):
         lcd_write(ord(message[i]),LCD_CHR)
 
 def wake_server(q):
+    RUNNING = True
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # Create TCP/IP socket
     # Bind the socket to the port
@@ -191,13 +192,13 @@ def wake_server(q):
 
 if __name__ == '__main__':
     #Begin program
-    RUNNING = True
     try:
         server = Process(name='server', target=wake_server, args = (q, ))
         LCD = Process(name='LCD', target=display, args = (q, ))
         server.start()
         LCD.start()
         server.join()
+        LCD.terminate()
         LCD.join()
     except KeyboardInterrupt:
         pass

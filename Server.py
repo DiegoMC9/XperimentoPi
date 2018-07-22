@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
-from time import sleep, time
+from time import sleep
+from random import choice
 import socket
 import sys
 from multiprocessing import Queue, Process
@@ -55,7 +56,7 @@ def display(q):
     while True:
         lcd_text(IP, LCD_LINE_2)
         if not q.empty():
-            roll(q.get(), int(round(time()))%2)
+            roll(q.get(), choice([RIGHT,LEFT]))
         else:
             lcd_text("No messages left", LCD_LINE_1)
 

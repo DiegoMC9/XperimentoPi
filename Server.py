@@ -5,17 +5,6 @@ import sys
 from multiprocessing import Queue, Process
 # first lets create the messages queue
 q = Queue()
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# Create TCP/IP socket
-# Bind the socket to the port
-server_address = ('', 80)
-print('starting up on {} port {}'.format(*server_address))
-try:
-    sock.bind(server_address)
-except socket.error as err:
-    print('Bind failed. Error Code : ' + str(err[0]) + ' Message ' + str(err[1]))
-    sys.exit()
-#IP=socket.gethostbyname(socket.gethostname())
 IP = "192.168.1.127"
 
 
@@ -162,6 +151,12 @@ def lcd_text(message,line):
         lcd_write(ord(message[i]),LCD_CHR)
 
 def wake_server(q):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # Create TCP/IP socket
+    # Bind the socket to the port
+    server_address = ('', 80)
+    print('starting up on {} port {}'.format(*server_address))
+    sock.bind(server_address)
     # Listen for incoming connections
     sock.listen(1)
     while True:

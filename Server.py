@@ -8,25 +8,6 @@ from multiprocessing import Queue, Process
 q = Queue()
 IP = "192.168.1.127"
 
-
-# Pinout of the LCD:
-# 1 : GND
-# 2 : 5V power
-# 3 : Display contrast - Connect to middle pin potentiometer
-# 4 : RS (Register Select)
-# 5 : R/W (Read Write) - Ground this pin (important)
-# 6 : Enable or Strobe
-# 7 : Data Bit 0 - not used
-# 8 : Data Bit 1 - not used
-# 9 : Data Bit 2 - not used
-# 10: Data Bit 3 - not used
-# 11: Data Bit 4
-# 12: Data Bit 5
-# 13: Data Bit 6
-# 14: Data Bit 7
-# 15: LCD Backlight +5V
-# 16: LCD Backlight GND
-
 # GPIO to LCD mapping
 LCD_RS = 7 # Pi pin 26
 LCD_E = 8 # Pi pin 24
@@ -39,11 +20,11 @@ LCD_D7 = 18 # Pi pin 12
 LCD_CHR = True # Character mode
 LCD_CMD = False # Command mode
 LCD_CHARS = 16 # Characters per line (16 max)
-LCD_LINE_1 = 0x80 # LCD memory lUsageUsageUsageocation for 1st line
+LCD_LINE_1 = 0x80 # LCD memory location 1st line
 LCD_LINE_2 = 0xC0 # LCD memory location 2nd line
 
 E_DELAY = 0.0005
-#lcd_custom(0,[0x04,0x02,0x0F,0x12,0x14,0x10,0x10,0x10]) -- tmp
+
 # Define main program code
 def display(q):
     RIGHT = True
